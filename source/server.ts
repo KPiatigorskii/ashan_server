@@ -2,7 +2,10 @@
 import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
-// import demoRoutes from './routes/demo.routes';
+import categoryRoutes from './routes/category.routes';
+import employeeRoutes from './routes/employee.routes';
+import productRoutes from './routes/product.routes';
+import storeRoutes from './routes/store.routes';
 // import schoolRouters from './routes/school.routers';
 
 const router: Express = express();
@@ -29,8 +32,10 @@ router.use((req, res, next) => {
 });
 
 // /** Routes */
-// router.use('/demo/', demoRoutes.router);
-// router.use('/general/', schoolRouters.router);
+router.use('/category/', categoryRoutes.router);
+router.use('/employee/', employeeRoutes.router);
+router.use('/product/', productRoutes.router);
+router.use('/store/', storeRoutes.router)
 
 /** Error handling */
 router.use((req, res, next) => {
