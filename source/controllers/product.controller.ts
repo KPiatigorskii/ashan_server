@@ -19,9 +19,6 @@ const getProductById = async (req: Request, res: Response, next: NextFunction) =
             product: result
         });
     })
-    // return res.status(200).json({
-    //     message: `getProductById ${req.params.id}`
-    // });
 };
 
 const updateProductById = async (req: Request, res: Response, next: NextFunction) => {

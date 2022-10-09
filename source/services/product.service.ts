@@ -22,12 +22,6 @@ interface localProduct {
     update_user_id: number;
     category_id: number;
     status_id: Status;
-
-    // createUser: string;
-    // updateUser: string;
-    // createDate: Date;
-    // updateDate: Date;
-    // statusId: number;
 }
 
 
