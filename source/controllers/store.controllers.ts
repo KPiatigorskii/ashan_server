@@ -1,4 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
+import { StoreService } from '../services/store.service';
+import { ErrorService } from '../services/error.service';
+import { store } from '../entities';
+
+const errorService: ErrorService = new ErrorService();
+const storeService = new StoreService(errorService);
 
 const getAllStores = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json({
@@ -7,9 +13,12 @@ const getAllStores = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 const getStoreById = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `getStoreById ${req.params.id}`
-    });
+    storeService.getStoreById(Number(req.params.id))
+    .then((result: store) => {
+        return res.status(200).json({
+            product: result
+        });
+    })
 };
 
 const updateStoreById = async (req: Request, res: Response, next: NextFunction) => {
