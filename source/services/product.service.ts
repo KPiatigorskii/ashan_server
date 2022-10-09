@@ -5,11 +5,11 @@ import { Queries } from "../constants"
 import { Status } from "../enums"
 
 interface IProductService {
-    getAllProductsByStoreId(id: number): Promise<any>;
-    getProductById(id: number): Promise<any>;
-    updateProductById(id: number): Promise<any>;
-    createProduct(): Promise<any>;
-    deleteProductById(): Promise<any>;
+    getAllProductsByStoreId(id: number): Promise<product>;
+    getProductById(id: number): Promise<product>;
+    updateProductById(id: number): Promise<product>;
+    createProduct(): Promise<product>;
+    deleteProductById(): Promise<product>;
 }
 
 interface localProduct {

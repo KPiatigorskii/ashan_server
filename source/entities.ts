@@ -1,11 +1,10 @@
 import { AppError, Status } from "./enums";
-import employeeRoutes from "./routes/employee.routes";
 
 export interface entityWithId {
     id: number;
 }
 
-export interface defaultDBEntity extends entityWithId{
+export interface defaultDBEntity {
     createUserId: number;
     updateUserId: number;
     createDate: Date;
@@ -19,23 +18,23 @@ export interface systemError {
     code: number;
 }
 
-export interface product extends defaultDBEntity {
+export interface product extends defaultDBEntity, entityWithId {
     innerUuid: number;
     productName: string;
     categoryId: number;
 }
 
-export interface store extends defaultDBEntity {
+export interface store extends defaultDBEntity, entityWithId {
     address: string;
     storeName: string;
 }
 
-export interface category extends defaultDBEntity {
+export interface category extends defaultDBEntity, entityWithId  {
     innerUuid: number;
     categoryName: string;
 }
 
-export interface employee extends defaultDBEntity{
+export interface employee extends defaultDBEntity, entityWithId {
     firstName: string;
     lastName: string;
     storeId: number;
