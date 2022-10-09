@@ -1,16 +1,16 @@
-import { AppError } from "./enums";
+import { AppError, Status } from "./enums";
 import employeeRoutes from "./routes/employee.routes";
 
 export interface entityWithId {
-    id: string;
+    id: number;
 }
 
 export interface defaultDBEntity extends entityWithId{
-    createUser: string;
-    updateUser: string;
+    createUserId: number;
+    updateUserId: number;
     createDate: Date;
     updateDate: Date;
-    statusId: number;
+    statusId: Status;
 }
 
 export interface systemError {
