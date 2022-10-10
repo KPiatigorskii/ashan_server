@@ -1,5 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import axios, { AxiosResponse } from 'axios';
+import { EmployeeService } from '../services/employee.service';
+import { ErrorService } from '../services/error.service';
+import { employee } from '../entities';
+
+const errorService: ErrorService = new ErrorService();
+const employeeService = new EmployeeService(errorService)
 
 const getAllEmployees = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json({
@@ -9,14 +15,17 @@ const getAllEmployees = async (req: Request, res: Response, next: NextFunction) 
 
 const getEmployeeByStoreId = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json({
-        message: `getEmployeeByStoreId ${req.params.id}`
+        message: `getEmployeeByStoreId`
     });
 };
 
 const getEmployeeById = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `getEmployeeById ${req.params.id}`
-    });
+    employeeService.getEmployeeById(Number(req.params.id))
+    .then((result: employee) => {
+        return res.status(200).json({
+            product: result
+        });
+    })
 };
 
 const updateEmployeeById = async (req: Request, res: Response, next: NextFunction) => {
