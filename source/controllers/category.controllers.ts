@@ -1,4 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
+import { category } from '../entities';
+import { CategoryService } from '../services/category.service';
+import { ErrorService } from '../services/error.service';
+
+const errorService = new ErrorService()
+const categoryService = new CategoryService(errorService)
 
 const getAllCategories = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json({
@@ -7,9 +13,12 @@ const getAllCategories = async (req: Request, res: Response, next: NextFunction)
 };
 
 const getCategoryById = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `getCategoryById ${req.params.id}`
-    });
+    categoryService.getCategoryById(Number(req.params.id))
+    .then((result: category) => {
+        return res.status(200).json({
+            product: result
+        });
+    })
 };
 
 const updateCategoryById = async (req: Request, res: Response, next: NextFunction) => {

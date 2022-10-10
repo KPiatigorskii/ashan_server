@@ -11,4 +11,6 @@ export class Queries {
 
     public static EmployeeById: string = "SELECT * FROM employee WHERE id = ?";
     
+    public static CategoryById: string = "SELECT * FROM category WHERE id = ?";
+    
 }
