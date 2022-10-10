@@ -1,5 +1,5 @@
 import express from 'express';
-import controller from '../controllers/employee.controllers';
+import controller from '../controllers/employee.controller';
 const router = express.Router();
 
 router.get('/get', controller.getAllEmployees); // Get all employees positions

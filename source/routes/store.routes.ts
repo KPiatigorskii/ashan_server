@@ -1,5 +1,5 @@
 import express from 'express';
-import controller from '../controllers/store.controllers';
+import controller from '../controllers/store.controller';
 const router = express.Router();
 
 router.get('/get', controller.getAllStores); // Get a list of all stores

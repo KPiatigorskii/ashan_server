@@ -1,6 +1,6 @@
 import express from 'express';
 // import controller from '../controllers/school.controller';
-import controller from '../controllers/category.controllers'
+import controller from '../controllers/category.controller'
 const router = express.Router();
 
 router.get('/get', controller.getAllCategories); // Get all product categories
