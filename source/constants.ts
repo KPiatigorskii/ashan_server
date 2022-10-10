@@ -8,4 +8,7 @@ export class Queries {
     public static StoreById: string = "SELECT * FROM store WHERE id = ?";
 
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id;";
+
+    public static EmployeeById: string = "SELECT * FROM employee WHERE id = ?";
+    
 }
