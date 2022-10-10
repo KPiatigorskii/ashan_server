@@ -48,8 +48,7 @@ export interface status {
     title: string;
 }
 
-export interface user {
-    id: number;
+export interface user extends defaultDBEntity, entityWithId {
     firstName: string;
     lastName: string;
     // login?: string;

@@ -9,8 +9,10 @@ export class Queries {
 
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id;";
 
-    public static EmployeeById: string = "SELECT * FROM employee WHERE id = ?";
+    public static EmployeeById: string = "SELECT * FROM employee WHERE id = ?"; 
     
     public static CategoryById: string = "SELECT * FROM category WHERE id = ?";
+
+    public static UserById: string = "SELECT * FROM [user] WHERE id = ?";
     
 }
