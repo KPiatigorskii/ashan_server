@@ -74,7 +74,7 @@ export class ProductService implements IProductService{
         return new Promise<product>((resolve, reject) => {
             const updateDate: Date = new Date();
             //const innerUuid: string =  uuidv4();
-            SqlHelper.executeQueryNoResult(this.errorService, Queries.updateProductById, false, product.innerUuid, product.productName, product.categoryId, DateHelper.dateToString(updateDate),id  )
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.UpdateProductById, false, product.innerUuid, product.productName, product.categoryId, DateHelper.dateToString(updateDate),id  )
             .then(() => {
                 resolve(product);
             })
@@ -88,7 +88,7 @@ export class ProductService implements IProductService{
             const createDate: Date = new Date();
             const createDateString = DateHelper.dateToString(createDate)
             const innerUuid: string =  uuidv4();
-            SqlHelper.createNew(this.errorService, Queries.createProduct,  product,
+            SqlHelper.createNew(this.errorService, Queries.CreateProduct,  product,
                 innerUuid, product.productName, product.categoryId, createDateString, createDateString, 1, 1, 0)
                 .then((result: entityWithId) => {
                     resolve(result as product);
@@ -101,7 +101,7 @@ export class ProductService implements IProductService{
 
     public createLocation(location: location): Promise<location>{
         return new Promise<location>((resolve, reject) => {
-            SqlHelper.executeQueryNoResult(this.errorService, Queries.createLocation, false,
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.CreateLocation, false,
                 location.productId, location.storeId, location.amountOfProducts, location.rowInStore, location.shelfInStore)
                 .then(() => {
                     resolve(location);
