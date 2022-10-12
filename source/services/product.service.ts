@@ -1,4 +1,4 @@
-import { product, systemError } from "../entities";
+import { product, systemError, entityWithId } from "../entities";
 import { SqlHelper } from "../helpers/sql.helper";
 import { ErrorService } from "./error.service";
 import { Queries } from "../constants"
@@ -11,7 +11,7 @@ interface IProductService {
     getAllProductsByStoreId(id: number): Promise<product[]>;
     getProductById(id: number): Promise<product>;
     updateProductById(product: product, id: number): Promise<product>;
-    createProduct(): Promise<product>;
+    createProduct(product: product): Promise<product>;
     deleteProductById(): Promise<product>;
 }
 
@@ -74,9 +74,19 @@ export class ProductService implements IProductService{
             });
         })
     }
-    public createProduct(): Promise<any>{
-        return new Promise<any>((resolve, reject) => {
-
+    public createProduct(product: product): Promise<product>{
+        return new Promise<product>((resolve, reject) => {
+            const createDate: Date = new Date();
+            const createDateString = DateHelper.dateToString(createDate)
+            const innerUuid: string =  uuidv4();
+            SqlHelper.createNew(this.errorService, Queries.createProduct,  product,
+                innerUuid, product.productName, product.categoryId, createDateString, createDateString, 1, 1, 0)
+                .then((result: entityWithId) => {
+                    resolve(result as product);
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
         })
     }
     public deleteProductById(): Promise<any>{

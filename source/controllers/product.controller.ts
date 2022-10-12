@@ -5,6 +5,7 @@ import { product } from '../entities';
 import { systemError } from '../entities';
 import { RequestHelper } from '../helpers/request.helper';
 import { ResponseHelper } from  '../helpers/response.helper';
+import { NON_EXISTENT_ID } from '../constants';
 
 const errorService: ErrorService = new ErrorService();
 const productService = new ProductService(errorService);
@@ -55,8 +56,24 @@ const updateProductById = async (req: Request, res: Response, next: NextFunction
 };
 
 const createProduct = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `createProduct`
+    const body: product = req.body;
+
+    productService.createProduct({
+        id: NON_EXISTENT_ID,
+        innerUuid: body.innerUuid,
+        productName: body.productName,
+        categoryId: body.categoryId,
+        createDate:  new Date,
+        createUserId: 1, 
+        statusId: 0,
+        updateDate: new Date,
+        updateUserId: 0
+    }, )
+    .then((result: product) => {
+        return res.status(200).json(result);
+    })
+    .catch((error: systemError) => {
+        return ResponseHelper.handleError(res, error);
     });
 };
 
