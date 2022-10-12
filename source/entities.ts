@@ -29,6 +29,14 @@ export interface store extends defaultDBEntity, entityWithId {
     storeName: string;
 }
 
+export interface location {
+    productId: number;
+    storeId: number;
+    amountOfProducts: number;
+    rowInStore: number;
+    shelfInStore: number;
+}
+
 export interface category extends defaultDBEntity, entityWithId  {
     innerUuid: number;
     categoryName: string;
