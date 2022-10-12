@@ -9,15 +9,21 @@ export class Queries {
                                             p.status_id  FROM product as p
                                             INNER JOIN store_to_product as stp
                                             ON p.id = stp.product_id and stp.store_id=?;`
-    public static updateProductById: string  = "UPDATE [ashan_store].[dbo].[product] SET inner_uuid = ?, name = ?, category_id = ?, update_date = ? WHERE id = ?";
-    public static createProduct: string = `INSERT [ashan_store].[dbo].[product]
+    public static UpdateProductById: string  = "UPDATE [ashan_store].[dbo].[product] SET inner_uuid = ?, name = ?, category_id = ?, update_date = ? WHERE id = ?";
+    public static CreateProduct: string = `INSERT [ashan_store].[dbo].[product]
                                         (inner_uuid, name, category_id, create_date, update_date, create_user_id, update_user_id, status_id)
                                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    public static createLocation: string = `INSERT [ashan_store].[dbo].[store_to_product] 
+    public static CreateLocation: string = `INSERT [ashan_store].[dbo].[store_to_product] 
                                         (product_id, store_id, amount_of_product, row_in_store, shelf_in_store)
                                         VALUES (?, ?, ?, ?, ?)`
     
     public static StoreById: string = "SELECT * FROM store WHERE id = ?";
+    public static GetAllStores:string = "SELECT * FROM store";
+    public static CreateStore:string = `INSERT [ashan_store].[dbo].[store]  
+    (address, store_name, create_date, update_date, create_user_id, update_user_id, status_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`
+    public static UpdateStoreById:string = "UPDATE [ashan_store].[dbo].[store] SET address = ?, store_name = ?, update_date = ? WHERE id = ?";
+    
 
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id;";
 

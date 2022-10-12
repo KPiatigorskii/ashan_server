@@ -1,14 +1,16 @@
-import { store } from "../entities";
+import { store, systemError, entityWithId } from "../entities";
 import { SqlHelper } from "../helpers/sql.helper";
 import { ErrorService } from "./error.service";
 import { Queries } from "../constants"
 import { Status } from "../enums"
+import { DateHelper } from "../helpers/date.helpers";
 
 interface IStore {
     getStoreById(id: number): Promise<store>;
-    updateStoreById(id: number): Promise<store>;
+    updateStoreById(store: store, id: number): Promise<store>;
     deleteStoreById(id: number): Promise<store>;
-    createStore(): Promise<store>;
+    getAllstores(): Promise<store[]>;
+    createStore(store: store): Promise<store>;
 }
 
 interface localStore {
@@ -27,6 +29,38 @@ export class StoreService implements IStore {
         private errorService: ErrorService
     ) { }
 
+    public createStore(store: store): Promise<store> {
+        return new Promise<store>((resolve, reject) => {
+            const createDate: Date = new Date();
+            const createDateString = DateHelper.dateToString(createDate)
+
+            SqlHelper.createNew(this.errorService, Queries.CreateStore, store, 
+                store.address, store.storeName, createDateString, createDateString, 1, 1, 0)
+                .then((result: entityWithId) => {
+                    resolve(result as store);
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        })
+    }
+
+    public getAllstores(): Promise<store[]> {
+        return new Promise<store[]>((resolve, reject) => {
+            const result: store[] = [];
+            SqlHelper.executeQueryArrayResult<localStore>(this.errorService, Queries.GetAllStores)
+            .then((queryResult: localStore[]) => {
+                queryResult.forEach((store: localStore) => {
+                    result.push(this.parseLocalStore(store))
+                });
+                resolve(result);
+            })
+            .catch((error: systemError) => {
+                reject(error);
+            })
+        })
+    }
+
     public getStoreById(id: number): Promise<store> {
         return new Promise<store>((resolve, reject) => {
             SqlHelper.executeQuerySingleResult<localStore>(this.errorService, Queries.StoreById, id)
@@ -38,21 +72,30 @@ export class StoreService implements IStore {
             })
         })
     }
-    public updateStoreById(id: number): Promise<store> {
-        return new Promise<store>((resolve, reject) => {
 
+    public updateStoreById(store: store, id: number): Promise<store> {
+        return new Promise<store>((resolve, reject) => {
+            const updateDate: Date = new Date();
+            const updateDateString = DateHelper.dateToString(updateDate)
+
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.UpdateStoreById, false, 
+                 store.address, store.storeName, updateDateString, id)  
+            .then(() => {
+                resolve(store);
+            })
+            .catch((error: systemError) => {
+                reject(error);
+            });
         })
     }
+
+
     public deleteStoreById(id: number): Promise<store> {
         return new Promise<store>((resolve, reject) => {
 
         })
     }
-    public createStore(): Promise<store> {
-        return new Promise<store>((resolve, reject) => {
 
-        })
-    }
 
     private parseLocalStore(local: localStore): store {
         return {
