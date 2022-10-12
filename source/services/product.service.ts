@@ -1,4 +1,4 @@
-import { product, systemError, entityWithId } from "../entities";
+import { product, systemError, entityWithId, location } from "../entities";
 import { SqlHelper } from "../helpers/sql.helper";
 import { ErrorService } from "./error.service";
 import { Queries } from "../constants"
@@ -13,6 +13,15 @@ interface IProductService {
     updateProductById(product: product, id: number): Promise<product>;
     createProduct(product: product): Promise<product>;
     deleteProductById(): Promise<product>;
+    createLocation(location: location): Promise<location>
+}
+
+interface localLocation{
+    product_id: number;
+    store_id: number;
+    amount_of_products: number;
+    row_in_store: number;
+    shelf_in_store: number;
 }
 
 interface localProduct {
@@ -89,6 +98,20 @@ export class ProductService implements IProductService{
                 });
         })
     }
+
+    public createLocation(location: location): Promise<location>{
+        return new Promise<location>((resolve, reject) => {
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.createLocation, false,
+                location.productId, location.storeId, location.amountOfProducts, location.rowInStore, location.shelfInStore)
+                .then(() => {
+                    resolve(location);
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        })
+    }
+
     public deleteProductById(): Promise<any>{
         return new Promise<any>((resolve, reject) => {
 
@@ -107,5 +130,16 @@ export class ProductService implements IProductService{
             updateDate: local.update_date,
             updateUserId: local.update_user_id
         };
+    }
+
+    private parseLocalLocation(local: localLocation): location {
+        return {
+            productId: local.product_id,
+            storeId: local.store_id,
+            amountOfProducts: local.amount_of_products,
+            rowInStore: local.row_in_store,
+            shelfInStore : local.shelf_in_store
+        
+        }
     }
 }

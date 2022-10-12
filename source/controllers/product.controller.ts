@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProductService } from '../services/product.service';
 import { ErrorService } from '../services/error.service';
-import { product } from '../entities';
+import { product, location } from '../entities';
 import { systemError } from '../entities';
 import { RequestHelper } from '../helpers/request.helper';
 import { ResponseHelper } from  '../helpers/response.helper';
@@ -78,8 +78,19 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 const createLocation = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `createLocation`
+    const body: location = req.body;
+    productService.createLocation({
+        productId: body.productId,
+        storeId: body.storeId,
+        amountOfProducts: body.amountOfProducts,
+        rowInStore: body.rowInStore,
+        shelfInStore: body.shelfInStore
+    })
+    .then((result: location) => {
+        return res.status(200).json(result);
+    })
+    .catch((error: systemError) => {
+        return ResponseHelper.handleError(res, error);
     });
 };
 
