@@ -2,14 +2,20 @@ import { Request, Response, NextFunction } from 'express';
 import { ProductService } from '../services/product.service';
 import { ErrorService } from '../services/error.service';
 import { product } from '../entities';
+import { systemError } from '../entities';
+import { RequestHelper } from '../helpers/request.helper';
+import { ResponseHelper } from  '../helpers/response.helper';
 
 const errorService: ErrorService = new ErrorService();
 const productService = new ProductService(errorService);
 
 const getAllProductByStoreId = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `getAllProductByStoreId ${req.params.id}`
-    });
+    productService.getAllProductsByStoreId(Number(req.params.id))
+    .then((result: product[]) => {
+        return res.status(200).json({
+            products: result
+        });
+    })
 };
 
 const getProductById = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,9 +28,30 @@ const getProductById = async (req: Request, res: Response, next: NextFunction) =
 };
 
 const updateProductById = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: `updateProductById ${req.params.id}`
-    });
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id)
+    if (typeof numericParamOrError === "number") {
+        if (numericParamOrError > 0) {
+            const body: product = req.body;
+
+            productService.updateProductById({
+                id: numericParamOrError,
+                innerUuid: body.innerUuid, 
+                productName: body.productName, 
+                categoryId: body.categoryId,
+                createDate:  new Date,
+                createUserId: 1, 
+                statusId: 0,
+                updateDate: new Date,
+                updateUserId: 0
+            }, numericParamOrError)
+            .then((result: product)=> {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            });
+        }
+    }
 };
 
 const createProduct = async (req: Request, res: Response, next: NextFunction) => {

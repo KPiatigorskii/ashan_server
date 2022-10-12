@@ -1,13 +1,16 @@
-import { product } from "../entities";
+import { product, systemError } from "../entities";
 import { SqlHelper } from "../helpers/sql.helper";
 import { ErrorService } from "./error.service";
 import { Queries } from "../constants"
 import { Status } from "../enums"
+import { QueryEvent } from "msnodesqlv8";
+import { DateHelper } from "../helpers/date.helpers";
+import {v4 as uuidv4} from 'uuid'
 
 interface IProductService {
-    getAllProductsByStoreId(id: number): Promise<product>;
+    getAllProductsByStoreId(id: number): Promise<product[]>;
     getProductById(id: number): Promise<product>;
-    updateProductById(id: number): Promise<product>;
+    updateProductById(product: product, id: number): Promise<product>;
     createProduct(): Promise<product>;
     deleteProductById(): Promise<product>;
 }
@@ -32,10 +35,22 @@ export class ProductService implements IProductService{
     ) { }
 
     public getAllProductsByStoreId(id: number){
-        return new Promise<product>((resolve, reject) => {
-        })
-    }
-    getProductById(id: number): Promise<product>{
+        return new Promise<product[]>((resolve, reject) => {
+            const result: product[] = [];
+
+            SqlHelper.executeQueryArrayResult<localProduct>(this.errorService, Queries.AllProductsByStoreId, id)
+            .then((queryResult: localProduct[]) => {
+                queryResult.forEach((product: localProduct) => {
+                    result.push(this.parseLocalProduct(product))
+                });
+                resolve(result);
+            })
+            .catch((error: systemError) => {
+                reject(error);
+            });
+    });
+}
+    public getProductById(id: number): Promise<product>{
         return new Promise<product>((resolve, reject) => {
             SqlHelper.executeQuerySingleResult<localProduct>(this.errorService, Queries.ProductById, id) // , Status.Active)
             .then((queryResult: localProduct) => {
@@ -46,17 +61,25 @@ export class ProductService implements IProductService{
             })
         })
     }
-    updateProductById(id: number): Promise<any>{
+    public updateProductById(product: product, id: number): Promise<any>{
+        return new Promise<product>((resolve, reject) => {
+            const updateDate: Date = new Date();
+            //const innerUuid: string =  uuidv4();
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.updateProductById, false, product.innerUuid, product.productName, product.categoryId, DateHelper.dateToString(updateDate),id  )
+            .then(() => {
+                resolve(product);
+            })
+            .catch((error: systemError) => {
+                reject(error);
+            });
+        })
+    }
+    public createProduct(): Promise<any>{
         return new Promise<any>((resolve, reject) => {
 
         })
     }
-    createProduct(): Promise<any>{
-        return new Promise<any>((resolve, reject) => {
-
-        })
-    }
-    deleteProductById(): Promise<any>{
+    public deleteProductById(): Promise<any>{
         return new Promise<any>((resolve, reject) => {
 
         })
