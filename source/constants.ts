@@ -27,7 +27,18 @@ export class Queries {
 
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id;";
 
-    public static EmployeeById: string = "SELECT * FROM employee WHERE id = ?"; 
+    public static EmployeeById: string = "SELECT * FROM [ashan_store].[dbo].[employee] WHERE id = ?"; 
+    public static GetAllEmployee: string = "SELECT * FROM [ashan_store].[dbo].[employee]";
+    public static CreateEmployee: string = `INSERT [ashan_store].[dbo].[employee] 
+    (first_name, last_name,store_id, date_of_birth, position, chief_id, status_id, create_date, update_date, create_user_id, update_user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    public static UpdateEmployeeById: string = `UPDATE [ashan_store].[dbo].[employee] SET
+     first_name = ?, last_name = ?, store_id = ?, date_of_birth = ?, position = ?, chief_id = ?,
+    status_id = ?, update_date = ?, update_user_id = ? where id = ?`;
+    public static DeleteEmployeeById: string = "UPDATE [ashan_store].[dbo].[employee] SET status_id = 0 WHERE id = ?";
+
+    public static CreateRelationEmployee: string = "UPDATE [ashan_store].[dbo].[employee] SET chief_id = ? WHERE id = ?";
+    public static DeleteRelationEmployee: string = "UPDATE [ashan_store].[dbo].[employee] SET chief_id = -1 WHERE id = ?";
     
     public static CategoryById: string = "SELECT * FROM category WHERE id = ?";
 

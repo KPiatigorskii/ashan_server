@@ -111,6 +111,7 @@ export class SqlHelper {
                     const queries: string[] = [query, Queries.SelectIdentity];
                     const executedQuery: string = queries.join(";");
                     let executionCounter: number = 0;
+                    console.log(params)
                     connection.query(executedQuery, params, (queryError: Error | undefined, queryResult: entityWithId[] | undefined) => {
                         if (queryError) {
                             reject(errorService.getError(AppError.QueryError));
