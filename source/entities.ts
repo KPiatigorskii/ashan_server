@@ -1,3 +1,4 @@
+import employeeController from "./controllers/employee.controller";
 import { AppError, Status } from "./enums";
 
 export interface entityWithId {
@@ -35,6 +36,10 @@ export interface location {
     amountOfProducts: number;
     rowInStore: number;
     shelfInStore: number;
+}
+
+export interface employeeRelation extends entityWithId {
+    chiefId: number;
 }
 
 export interface category extends defaultDBEntity, entityWithId  {
