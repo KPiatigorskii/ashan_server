@@ -3,6 +3,8 @@ export const NON_EXISTENT_ID: number = -1;
 
 export class Queries {
 
+    public static GetUserByLogin: string = "SELECT id , password FROM [ashan_store].[dbo].[user]  WHERE login = ?"
+
     public static ProductById: string = "SELECT * FROM product WHERE id = ?";
     public static AllProducts: string = "SELECT * FROM product";
     public static AllProductsByStoreId: string  = `SELECT p.id, p.inner_uuid, p.category_id, 
