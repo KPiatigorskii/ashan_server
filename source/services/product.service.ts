@@ -8,6 +8,7 @@ import { DateHelper } from "../helpers/date.helpers";
 import {v4 as uuidv4} from 'uuid'
 
 interface IProductService {
+    getAllProducts(): Promise<product[]>;
     getAllProductsByStoreId(id: number): Promise<product[]>;
     getProductById(id: number): Promise<product>;
     updateProductById(product: product, id: number): Promise<product>;
@@ -43,6 +44,23 @@ export class ProductService implements IProductService{
         private errorService: ErrorService
     ) { }
 
+    public getAllProducts(){
+        return new Promise<product[]>((resolve, reject) => {
+            const result: product[] = [];
+
+            SqlHelper.executeQueryArrayResult<localProduct>(this.errorService, Queries.AllProducts)
+            .then((queryResult: localProduct[]) => {
+                queryResult.forEach((product: localProduct) => {
+                    result.push(this.parseLocalProduct(product))
+                });
+                resolve(result);
+            })
+            .catch((error: systemError) => {
+                reject(error);
+            });
+        });
+    }
+
     public getAllProductsByStoreId(id: number){
         return new Promise<product[]>((resolve, reject) => {
             const result: product[] = [];
@@ -57,8 +75,9 @@ export class ProductService implements IProductService{
             .catch((error: systemError) => {
                 reject(error);
             });
-    });
-}
+        });
+    }
+
     public getProductById(id: number): Promise<product>{
         return new Promise<product>((resolve, reject) => {
             SqlHelper.executeQuerySingleResult<localProduct>(this.errorService, Queries.ProductById, id) // , Status.Active)
@@ -70,6 +89,7 @@ export class ProductService implements IProductService{
             })
         })
     }
+
     public updateProductById(product: product, id: number): Promise<any>{
         return new Promise<product>((resolve, reject) => {
             const updateDate: Date = new Date();
@@ -83,6 +103,7 @@ export class ProductService implements IProductService{
             });
         })
     }
+    
     public createProduct(product: product): Promise<product>{
         return new Promise<product>((resolve, reject) => {
             const createDate: Date = new Date();

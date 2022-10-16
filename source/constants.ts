@@ -4,6 +4,7 @@ export const NON_EXISTENT_ID: number = -1;
 export class Queries {
 
     public static ProductById: string = "SELECT * FROM product WHERE id = ?";
+    public static AllProducts: string = "SELECT * FROM product";
     public static AllProductsByStoreId: string  = `SELECT p.id, p.inner_uuid, p.category_id, 
                                             p.create_date, p.update_date, p.create_user_id, p.update_user_id, 
                                             p.status_id  FROM product as p
