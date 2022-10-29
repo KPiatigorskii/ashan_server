@@ -1,10 +1,14 @@
-export const DB_CONNECTION_STRING: string = "server=.;Database=ashan_store;Trusted_Connection=Yes;Driver={ODBC Driver 17 for SQL Server}";
+//export const DB_CONNECTION_STRING: string = "server=.;Database=ashan_store;Trusted_Connection=Yes;Driver={ODBC Driver 17 for SQL Server}";
+export const DB_CONNECTION_STRING: string = "server=DESKTOP-AE49AV3\\SQLEXPRESS;Database=ashan_store;Trusted_Connection=Yes;Driver={ODBC Driver 17 for SQL Server}";
 export const NON_EXISTENT_ID: number = -1;
+export const TOKEN_SECRET: string = "08d24819-dfa6-424c-9fda-ae6530033d49";
 
 export class Queries {
 
-    public static GetUserByLogin: string = "SELECT id , password FROM [ashan_store].[dbo].[user]  WHERE login = ?"
 
+    public static GetUserByLogin: string = "SELECT id , password FROM [ashan_store].[dbo].[user]  WHERE login = ?"
+    public static AddUser: string = "INSERT [user] (first_name, last_name, login, password, role_id, create_date, update_date, create_user_id, update_user_id, status_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
     public static ProductById: string = "SELECT * FROM product WHERE id = ?";
     public static AllProducts: string = "SELECT * FROM product";
     public static AllProductsByStoreId: string  = `SELECT p.id, p.inner_uuid, p.category_id, 

@@ -1,5 +1,5 @@
 import employeeController from "./controllers/employee.controller";
-import { AppError, Status } from "./enums";
+import { AppError, Role, Status } from "./enums";
 
 export interface entityWithId {
     id: number;
@@ -18,6 +18,12 @@ export interface systemError {
     message: string;
     code: number;
 }
+
+export interface authenticationToken {
+    userData: jwtUserData;
+}
+
+export interface AuthenticatedRequest extends Request, authenticationToken { }
 
 export interface product extends defaultDBEntity, entityWithId {
     innerUuid: number;
@@ -66,4 +72,10 @@ export interface user extends defaultDBEntity, entityWithId {
     lastName: string;
     // login?: string;
     // password?: string;
+}
+
+
+export interface jwtUserData {
+    userId: number;
+    roleId: Role;
 }

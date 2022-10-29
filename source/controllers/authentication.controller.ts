@@ -1,32 +1,43 @@
 import { Request, Response, NextFunction } from 'express';
-import { ResponseHelper } from '../helpers/response.helper';
+import jwt from "jsonwebtoken";
 import { ErrorService } from '../services/error.service';
-import { AuthenticationService } from '../services/authentication.service'; 
-import bcrypt from "bcryptjs"
-import { entityWithId, systemError } from '../entities';
-
-const errorService = new ErrorService()
-const authenticationService: AuthenticationService = new AuthenticationService(errorService)
+import { AuthenticationService } from '../services/authentication.service';
+import { authenticationToken, jwtUserData, systemError } from '../entities';
+import { ResponseHelper } from '../helpers/response.helper';
+import { TOKEN_SECRET } from '../constants';
 
 interface localUser {
-  login: string
-  password: string;
+    login: string;
+    password: string;
 }
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
-    const user: localUser = req.body
-    authenticationService.login(user.login, user.password)
-    .then((id: number) => {
-      // generate JWT token
-        const token: string = "1"; 
-        return res.status(200).json({
-          token: token
-        }); // handle errors
-    })
-    .catch((error: systemError) => {
-      return ResponseHelper.handleError(res, error)
-    })
+const errorService: ErrorService = new ErrorService();
+const authenticationService: AuthenticationService = new AuthenticationService(errorService);
 
+const login = async (req: Request, res: Response, next: NextFunction) => {
+    const user: localUser = req.body;
+
+    try {
+        const userData: jwtUserData = await authenticationService.login(user.login, user.password);
+
+        const authenticationToken: authenticationToken = {
+            userData: userData
+        };
+            
+        const token: string = jwt.sign(
+            authenticationToken,
+            TOKEN_SECRET,
+            {
+                expiresIn: "2h",
+            });
+
+        return res.status(200).json({
+            token: token
+        });
+    }
+    catch (error: any) {
+        return ResponseHelper.handleError(res, error as systemError, true);
+    }
 };
 
- export default {login}
+export default { login };
