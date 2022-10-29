@@ -7,8 +7,8 @@ import { DateHelper } from "../helpers/date.helpers";
 
 interface IUser {
     getUserById(id: number): Promise<user>;
-    updateUserById(id: number): Promise<user>;
-    deleteUserById(id: number): Promise<user>;
+    updateById(user: user, userId: number): Promise<user>;
+    deleteById(id: number, userId: number): Promise<void>;
     createUser(user: user, userId: number): Promise<user>;
 }
 
@@ -39,16 +39,33 @@ export class UserService implements IUser {
             })
         })
     }
-    public updateUserById(id: number): Promise<user> {
-        return new Promise<user>((resolve, reject) => {
 
-        })
-    }
-    public deleteUserById(id: number): Promise<user> {
+    public updateById(user: user, userId: number): Promise<user> {
         return new Promise<user>((resolve, reject) => {
-
-        })
+            const updateDate: Date = new Date();
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.UpdateUserById, false, user.firstName, user.lastName, DateHelper.dateToString(updateDate), userId, user.id, Status.Active)
+                .then(() => {
+                    resolve(user);
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        });
     }
+
+    public deleteById(id: number, userId: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const updateDate: Date = new Date();
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.DeleteUserById, true, DateHelper.dateToString(updateDate), userId, Status.NotActive, id, Status.Active)
+                .then(() => {
+                    resolve();
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        });
+    }
+
     public createUser(user: user, userId: number): Promise<user> {
         return new Promise<user>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
@@ -66,12 +83,7 @@ export class UserService implements IUser {
         return {
             id: local.id,
             firstName: local.first_name,
-            lastName: local.last_name,
-            //createDate: local.create_date,
-            //createUserId: local.create_user_id, 
-            //statusId: local.status_id,
-            //updateDate: local.update_date,
-            //updateUserId: local.update_user_id
+            lastName: local.last_name
         }
     }
 }

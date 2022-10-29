@@ -4,8 +4,8 @@ import controller from '../controllers/user.controller';
 import middleware from '../middleware/auth.middleware';
 const router = express.Router();
 
-router.post('/add', middleware.verifyToken([Role.Administrator]), controller.createUser); //middleware.verifyToken([Role.Administrator]), 
-router.get('/get/:id', middleware.verifyToken([Role.RegularUser]),  controller.getById)
+router.post('/create', middleware.verifyToken([Role.Administrator]), controller.createUser);
+router.get('/get/:id', middleware.verifyToken([Role.RegularUser, Role.Administrator]),  controller.getById)
 router.put('/:id', middleware.verifyToken([Role.Administrator]),  controller.updateById);
 router.delete('/:id', middleware.verifyToken([Role.Administrator]),  controller.deleteById);
 
