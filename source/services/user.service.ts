@@ -1,14 +1,15 @@
-import { user } from "../entities";
+import { entityWithId, systemError, user } from "../entities";
 import { SqlHelper } from "../helpers/sql.helper";
 import { ErrorService } from "./error.service";
 import { Queries } from "../constants"
-import { Status } from "../enums"
+import { Role, Status } from "../enums"
+import { DateHelper } from "../helpers/date.helpers";
 
 interface IUser {
     getUserById(id: number): Promise<user>;
     updateUserById(id: number): Promise<user>;
     deleteUserById(id: number): Promise<user>;
-    createUser(): Promise<user>;
+    createUser(user: user, userId: number): Promise<user>;
 }
 
 interface localUser {
@@ -48,10 +49,17 @@ export class UserService implements IUser {
 
         })
     }
-    public createUser(): Promise<user> {
+    public createUser(user: user, userId: number): Promise<user> {
         return new Promise<user>((resolve, reject) => {
-
-        })
+            const createDate: string = DateHelper.dateToString(new Date());
+            SqlHelper.createNew(this.errorService, Queries.AddUser, user, user.firstName, user.lastName, user.login as string, user.password as string, Role.RegularUser, createDate, createDate, userId, userId, Status.Active)
+                .then((result: entityWithId) => {
+                    resolve(result as user);
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        });
     }
 
     private parseLocalUser(local: localUser): user {
@@ -59,11 +67,11 @@ export class UserService implements IUser {
             id: local.id,
             firstName: local.first_name,
             lastName: local.last_name,
-            createDate: local.create_date,
-            createUserId: local.create_user_id, 
-            statusId: local.status_id,
-            updateDate: local.update_date,
-            updateUserId: local.update_user_id
+            //createDate: local.create_date,
+            //createUserId: local.create_user_id, 
+            //statusId: local.status_id,
+            //updateDate: local.update_date,
+            //updateUserId: local.update_user_id
         }
     }
 }

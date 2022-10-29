@@ -67,11 +67,11 @@ export interface status {
     title: string;
 }
 
-export interface user extends defaultDBEntity, entityWithId {
+export interface user extends entityWithId {
     firstName: string;
     lastName: string;
-    // login?: string;
-    // password?: string;
+    login?: string;
+    password?: string;
 }
 
 

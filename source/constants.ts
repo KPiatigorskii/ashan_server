@@ -6,7 +6,7 @@ export const TOKEN_SECRET: string = "08d24819-dfa6-424c-9fda-ae6530033d49";
 export class Queries {
 
 
-    public static GetUserByLogin: string = "SELECT id , password FROM [ashan_store].[dbo].[user]  WHERE login = ?"
+    public static GetUserByLogin: string = "SELECT id , password, role_id FROM [ashan_store].[dbo].[user]  WHERE login = ?"
     public static AddUser: string = "INSERT [user] (first_name, last_name, login, password, role_id, create_date, update_date, create_user_id, update_user_id, status_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     public static ProductById: string = "SELECT * FROM product WHERE id = ?";
